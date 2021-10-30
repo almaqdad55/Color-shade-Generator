@@ -1,0 +1,67 @@
+import React, { useState } from "react";
+import SingleColor from "./SingleColor";
+
+import Values from "values.js";
+
+function App() {
+  const [color, setColor] = useState("");
+  const [error, setError] = useState(false);
+  const [list, setList] = useState([]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    try {
+      let colors = new Values(color).all(10);
+      setList(colors);
+      console.log(colors);
+    } catch (error) {
+      setError(true);
+    }
+  };
+
+  return (
+    <React.Fragment>
+      <h4
+        style={{
+          paddingTop: "2rem",
+          marginBottom: "0",
+          paddingBottom: "1rem",
+          paddingLeft: "2rem",
+          textTransform: "none",
+        }}
+      >
+        Enter a color in hex from e.g. (#f15025)
+      </h4>
+      <section className="container">
+        <h3>color generator</h3>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+            placeholder="#f15025"
+            className={`${error ? "error" : null}`}
+          />
+          <button className="btn" type="submit">
+            submit
+          </button>
+        </form>
+      </section>
+      <section className="colors">
+        {list.map((color, index) => {
+          return (
+            <SingleColor
+              key={index}
+              {...color}
+              index={index}
+              hexColor={color.hex}
+              style={{ border: "1px solid pink" }}
+            />
+          );
+        })}
+      </section>
+    </React.Fragment>
+  );
+}
+
+export default App;
